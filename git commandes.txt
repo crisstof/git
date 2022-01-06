@@ -1,0 +1,62 @@
+*****************************************************************************************
+	Premier pas 									*
+*****************************************************************************************
+Après une installation de git sur votre machine et une ouverture de compte distant.     |
+Le dossier .git contient l'historique des modifications et la configuration projet.     |
+-----------------------------------------------------------------------------------------
+Configuration:
+git config --global user.name  "Christophe"
+git config --global user.email  "criss@voila.fr"
+git config --list #voir la configuration global de git
+-----------------------------------------------------------------------------------------
+Commandes principales:
+git init   #initialiser un repository (dans un dossier workspace pour un nouveau projet)
+git clone https://github.com/crisstof/git.git #récupère le repository dans notre dossier
+					      #Ouvrir ce dossier avec vscode + fichier
+git status #affiche l'état du projet.	      #il sort le fichier Untracked files (rouge)
+git add index.html  #le fichier est en zone de transite unstage (vert)
+	git add . #ajout de tout les fichiers
+git commit -m "Ajout de l'index.html"        #enfin le fichier est enregistrer
+git log    #affiche l'historique des commits avec le code hash (commit unique)
+**
+#On modifie un fichier mais on en a oublié un pour faire un nouveau commit:
+					      au lieu de refaire un commit:
+git add fichier_manquant
+git commit --amend #ouvre le commit et faire le changement du texte
+**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

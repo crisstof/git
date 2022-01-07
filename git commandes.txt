@@ -8,31 +8,221 @@ Configuration:
 git config --global user.name  "Christophe"
 git config --global user.email  "criss@voila.fr"
 git config --list #voir la configuration global de git
+git config --global core.editor nano  #ou choisir vim
+git config --global alias.co checkout  #raccourci (faire un alias)
+git config --global alias.unstage 'reset HEAD #créer une commande
 -----------------------------------------------------------------------------------------
-Commandes principales:
+-----Commandes principales:--------------------------------------------------------------
 git init   #initialiser un repository (dans un dossier workspace pour un nouveau projet)
 git clone https://github.com/crisstof/git.git #récupère le repository dans notre dossier
-					      #Ouvrir ce dossier avec vscode + fichier
+					      #Ouvrir ce dossier avec vscode: [. code]
 git status #affiche l'état du projet.	      #il sort le fichier Untracked files (rouge)
-git add index.html  #le fichier est en zone de transite unstage (vert)
-	git add . #ajout de tout les fichiers
+git add index.html  #le fichier est en zone de transite unstage (vert) [git stage fic.o]
+	git add . #ajout de tout les fichiers (raccourci)
 git commit -m "Ajout de l'index.html"        #enfin le fichier est enregistrer
 git log    #affiche l'historique des commits avec le code hash (commit unique)
-**
+****
 #On modifie un fichier mais on en a oublié un pour faire un nouveau commit:
 					      au lieu de refaire un commit:
 git add fichier_manquant
 git commit --amend #ouvre le commit et faire le changement du texte
-**
+#on veut effacer un fichier:
+git rm -f file1.txt #supprime complètement  
+git rm --cached file1.txt (passer le fichier untracked <- unstage)
+****
+git branch -M main #on renomme de force la branch master  [facultatif c'est déjà main]
+git remote add origin https://github.com/crissval/example.git #on va lier le dépôt distant
+							[facultatif si on a fait un clone]
+git push -u origin main #on envoie sur github
+				#Authentification si ok.
+
+****Visualiser les différences des commits?
+Après plusieurs travaux on ne sait plus ce qu'on a changer ou commiter à la fin ?
+git diff #nous montre les changements par lignes (-- retirer, ++ ajouter)
+    git diff --staged fic.o
+    git diff head #compare tout les fichiers
+gitk&       #voir la position et révision dans le graphe des révisions et branches
+git status
+git log --oneline
+****
+
+****Comment revenir sur un commit?  (revenir en arrière d'un fichier)
+#Revenir à un commit
+git checkout e32bb29 index.html #ici on revient
+git checkout numcommit #visualiser, copier des lignes de code sans apporter aucune modification
+git commit "Suppression de la modif" #on refait un commit pour revenir comme avant
+enfin on a pas envie de supprimer les commits, mais on veut quand même revenir:
+git revert numCommit
+
+#Revenir sur un fichier, sur le dernier commit
+git restore index.html #état du dernier commit
+ou
+git checkout HEAD index.html #c'est la même chose checkout le couteaux suisse
+#Visualiser le fichier d'un commit**
+git restore --source HEAD~3 index.html #visualise le 3ième commit en partant du haut
+                                       # le fichier index
+git restore index.html #on retourne au dernier commit
+#Enlever de la zone de transit on a déjà commiter
+git restore --staged index.html
+****
+
+****SUPPRIMER DES COMMITS   reset et revert
+git log --oneline #un log raccourcie
+git commit -a -m "ajout h3 index.html" #commande direct
+git reset dd09660 #supprime le commit mais le fichier index est inchangé 
+#on peut faire un restore pour le retrouver ou autre changement
+"####reset completement####
+git reset --hard numcommit#efface et revient même au fichier d'avant du commit
+                        #revient à la version antérieur du répertoire de travail
+****
+
+*********CREER UN PATCH
+on peut revenir en arrière et supprimer toutes les modifications mais 2 cas:
+Si les commits non pas été publiés:
+il suffit de revenir à la version antérieur du répertoire de travail
+git reset --hard numCommit
+si vous posséder des modification non enregistrer?
+git stash  #sauvegarde les modifications
+git reset --hard numCommit #remetàzéro le répertoire de travail par rapport à la révision spécifiée
+git stash pop  #applique les modif sauvegardées
+(si un fichier est concerné alors il y aura un conflit)
+
+Si les commits ont été publiée
+créer un patch qui correspondra aux modifications et enregistrer les modif avec un nouveau commit
+git revert numCOmmit  #crée un patch qui applique la révision demandée au répertoire de travail
+#il est également possible d'utiliser la commande en donnant un nombre d'enregistrements que 
+l'on souhaite annuler (4 dans cet exemple)
+git revert HEAD~4..HEAD
+#Vous pouvez ensuite sauvegarder votre travail: 
+Pensez à bien spécifier ce que vous avez fait dans le message d'enregistrement:
+git commit
+
+Mais éviter de supprimer des commits, il vaut mieux refaire un commit:
+on a pas envie de le supprimer mais on veut quand même revenir:
+git revert aef459a #ce qu'on veut ignorer ça remet un commit au dessus sans effacer pour le collegue
+********
+
+*********CLONE VS FORK
+git clone https://github.com/juliangarnier/anime.git #on clone le projet sur notre machine
+git fork #un fork on copie le repo sur notre profile github
+direct sur le github de la personne click sur fork et le repo est dans le mien.
+Ensuite on peut lui proposer des pull request notre contribution.
+********
+
+
+*********Le remisage  (stocker sans commiter)
+si on veut commiter pour passer à autre chose mais que le code est instable.
+on est entrain de travailler donc on fait
+git stash # cela supprime ce que j'ai fait et plus rien a commiter
+	  #on est revenu sur le commit d'avant
+git commit -a  -m "suppression des avancés"
+git stash list #on voit les stash
+#si on veut revenir ce qu'on était entrain de faire
+git stash apply #cela remet en mémoire 
+git stach drop #supprime le stash parce que retravaille avant l'arrêt 
+git stash save ajout du code #donne un nom au stash de la liste
+git stash -u  #pour tracker les nouveaux fichier avec le nouveau stash
+*utiliser une petite mémoire de git 
+git stash drop stach@[1] #supprime le stash1
+git stash apply #fusionne les stash pour repartir dans le développement
+#si vous posséder des modification non enregistrées dans votre répertoire
+de travail et que vous souhaitez les conserver:
+git stash #sauvegarde les modifications
+git reset --hard numcommit #remet à zéro le répertoire de travail par rapport à la révision spécifié
+git stash pop  #applique les modification sauvegardées
+
+
+***********************************
+Fichier Readme  en .md en markdown
+***********************************
+markdown Daring Fireball
+on peut supprimer un repo
+on va sur le repo>setting> en bas supprime repo
+Héberger un porte folio ou autre documentation
+setting>pages> branch main  (your ready site) il suffit d'acheter une url ou utiliser l'url github
+
+
+*********************************
+   FICHER GITIGNORE (gitignore)
+*********************************
+Pour ignorer des fichiers log , keyapi  ...
+"ajouter le fichier  .gitignore
+et ajouter les noms de fichier dans ce fichier
+git status #on a que gitignore et pas les autres fichiers entrées
 
 
 
+-----------------------------------------------------------------------------------------
+--------autres commandes-----------------------------------------------------------------
+git -version
+git update-git-for-windows #mise à jour de git
+
+##Utiliser un proxy (entreprise)
+$ git config --global http.proxy http://172.16.4.254:8080
+$ git config --global --unset http.proxy #désactive le proxy.
+$ git config --global http.sslverify "false" #Eviter l'erreur de certificat
+
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
 
 
+-----------------------------------------------------------------------------------------
+local et distant
+-----------------------------------------------------------------------------------------
+le log nous montre la branch origin celle distante (repère)
+git branch -a #les branch en rouge
+mais pour accéder il faudra créer une branch du même nom.
+git switch nom_de_la_branche #ok on a accès, ce sont les références
+
+dépot distant
+git remote -v
+ on a push vers l'url (affiche l'url du projet)
+ on a fetch 
+
+si on travaille à plusieurs c'est le bazarre avec push.
+on travaille avec des branch et des pull request.
+on crée une branch style on met des fichiers on commit et
+git push origin styles #ça va créer la branch sur github
+pull request incorporer la branch à notre dépot distant
+
+git fetch
+La commande git fetch va récupérer toutes les données des commits effectués 
+sur la branche courante qui n'existent pas encore dans votre version en local. 
+Ces données seront stockées dans le répertoire de travail local mais ne seront 
+pas fusionnées avec votre branche locale. 
+Si vous souhaitez fusionner ces données pour que votre branche soit à jour, 
+vous devez utiliser ensuite la commande git merge.
+
+La commande git pull est en fait la commande qui regroupe les commandes 
+git fetch suivie de git merge.Cette commande télécharge les données des commits 
+qui n'ont pas encore été récupérées dans votre branche locale puis fusionne ensuite ces données.
+
+Le choix de la commande à utiliser dépend de la façon dont vous souhaitez travailler. 
+La commande git pull automatise la mise à jour des données mais peut entraîner de nombreux conflits
+ Si vous avez modifié beaucoup de fichiers, tiliser la commande git fetch permet de garder son
+ répertoire de travail à jour et de contrôler le moment où l'on souhaite fusionner les données.
 
 
+-----------------------------------------------------------------------------------------
+partager une branch
+-----------------------------------------------------------------------------------------
+avant de changer de branch vous devez faire un commit de tous vos changement 
+sinon on veut changer de branch sans commit et éviter le commit au milieu d'un travail en cours:
+git stash  #les modif sont sauvegardés et mis de côté (working directory est propre)
+git stash apply  #restaurés et retrouver l'état des fichier
 
+git branch -r  #partager une branch   #origin nom du serveur depuis le clone par exemple
+si le serveur possède une autre branche et que l'on souhaite travailler dessus:
+il faut créer une copie de cette branche sur votre pc on appelle ça tracker (suivre) les
+changements du serveur: git branch --track brancheLocale  origin/brancheServeur
+on a crée une branch locale on peut la connecter avec celle du serveur
 
+Ajouter une branche sur le serveur
+	. git push origin :refs/head/nom_new_branch
+	. git branch  - -track     //suivre la branch local en local. L’inverse est possible
+
+Supprimer une branche sur le serveur
+	. git push origin :heads/nom_branche_a_supprimer
 
 
 

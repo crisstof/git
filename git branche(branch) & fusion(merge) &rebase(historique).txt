@@ -1,0 +1,155 @@
+*****************************************************************************************
+	Branche & Fusion - branch & merge  & rebase - récrire l'historique									*
+*****************************************************************************************
+On est sur la branche main (anciennement master) mais si on veut expérimenter d'autres	|
+choses par rapport à un point du développement on crée une branche.			|
+Si notre expérimentation est fructueuse il faudra Fusionner notre travaille avec la 	|
+branche de base pour la prendre en compte.						|
+3 Types de Fusion:									|
+   1 fusion sans conflit (Si pas de changement dans le main [le plus simple])		|
+      - pendant notre expérimentation personne a modifier la branche principale.	|
+   2 fusion avec conflit (Si on travaille sur le même fichier onpeut avoir un conflit)	|
+      - On a des conflits à partir de:							|
+        je travaille sur le fichier et qu'un autre a supprimer ce fichier et a fait un	|
+        commit .									|
+                - on garde le fichier ou pas, si un autre a supprimer le fichier.	|
+		- on change à la même ligne un fichier (plus courant).			|
+		- on change du code existant sur le même fichier.			|
+		- on va sur la branch master et on merge				|
+		- on résoud ce qu'on veut garder (résoudre le conflit)			|
+        git status, il faut quand même commit les modifications.			|
+    3 fusion par récursion (Si pas le même code qui rentre en jeu)			|
+			   (Si pas de conflit et un commit merge est créé)		|
+	- Si une personne à travailler sur la branche principale et qu'il a ajouter	|
+          un code en plus, mais ne travaille pas sur les mêmes fichiers que 		|
+          la branche d'expérimentation, ce cas ne crée pas de conflit, mais des fichiers|
+          en plus.									|
+        - on crée un fichier différent dans chaque branche et on commit les 2 dans 	|
+          chaque branche, on merge la branche d'expérimentation alors git utilise 	|
+          l'algo récurssif c'est ok, même si on ajoute dans le même fichier des données	|
+----------------------------------------------------------------------------------------
+*****Créer une branche   ******
+git branch  #sur quelle branche on est. (il faut dèjà avoir fait un commit)
+git branch -a #pour voir les autres branches
+git branch contact  #crée une nouvelle branche contact
+git switch contact  #on va sur la branch contact
+			#on peut travailler sur la branche d'expérimentaiton (contact) 
+ou
+git switch -c contact #on crée une branch et on switch directement dessus.
+ou 
+on peut créer une nouvelle branche à partir de cette version:
+git checkout -b old-state  numcommit
+#pour revenir à la version actuelle il faudra refaire check-out
+*****Supprimer une branch*** #Ne pas être sur la branch qu'on veut supprimer
+git branch -d contact #si on a merge
+git branch -D contact #branch non merger
+
+*****Renommer des branch**** #il faut être sur la branch
+git branch -m master2 #bien, mais depuis 2020 github utilise main au lieu de master
+
+*****Se déplacer dans les branches avec switch: #mais avant nous avions git Checkout
+git branch api  #crée une branch
+git checkout api #on a switcher entre les branches
+*mais aussi on peut switcher entre les commits*
+git checkout 93a74505713ec8fa3d37529edd632e1b609b334a
+##on voit les modifications le Head est au commit arrière
+#et pour revenir en haut de ma branche
+git checkout master
+**pour changer de commit plus facilement on peut créer des tag**
+on va sur un commit est:
+git tag V1    #au lieu d'un id
+git tag -d V1 #supprime le tag
+git tag #liste les tags
+
+
+*****Fusion  MERGE (fusionner notre travail avec la branche principal)   ******
+***** 3 types de fusion*****
+1 Fusion sans conflit: Personne a modifier la branche principale.
+                       On se place sur la branch master!!!!!!!!!!!
+git merge contact  #Fast-forward  
+			#c'est le plus simple si pas de changement dans le master
+
+
+2 Fusion avec conflit: Si on travaille sur le même fichier, on peut avoir un conflit.
+##si on change depuis branch master (changement de contact depuis master) commit
+##si on change depuis branch contact (changement de contact depuis contact) commit
+****************On a des conflits à partir de:
+je travaille sur le fichier et qu'un autre a supprimer ce fichier et a fait un commit.
+ (on garde le fichier ou pas)
+on change à la même ligne un fichier (ici nous)
+on change du code existant sur le même fichier.
+on va sur la branch master et on merge
+on résoudre ce qu'on veut garder (résoudre le conflit)
+mais git status il faut quand même commit les modifications.
+
+
+3 Fusion par récursion   (Pas le même code qui rentre en jeu)
+			 (pas de conflit et un commit merge est créé)
+Si une personne à travailler sur la branche principale et qu'il a ajouter
+un code en plus mais ne travaille pas sur les mêmes fichiers que 
+la branche d'expérimentation. (pas de conflit) mais des fichiers en plus;
+on crée un fichier différent dans chaque branche et on commit les 2 dans chaque branche.
+et on merge contact, git utilise l'algo récurssif est c'est tout ok.
+même si on ajoute dans le même fichier des données
+
+
+***Fusionner à la main et ce qui va dans notre sens et pas celui de la logique
+   CHERRY PICKING (cueillire des cerises)
+ce qui va dans notre sens et pas celui logique  
+(Un sophisme: est un procédé rhétorique, une argumentation, à la logique fallacieuse) 
+C'est un raisonnement qui porte en lui l'apparence de la rigueur, voire de l'évidence, 
+mais qui n'est en réalité pas valide au sens de la logique, quand bien même 
+sa conclusion serait pourtant « vraie ».
+
+******************************************************************************
+NAVBAR----------ACCUEIL--------------MERGE AJOUT VIDEO
+		  | _________________|
+	          |/ 
+            AJOUT VIDEO------AJOUT IMAGE
+exemple:
+on a envie de merge video mais pas image.
+git switch -c feature #on crée et se place dans la branch feature
+git commit -a -m "ajout video"
+git commit -a -m "ajout image"
+git switch master
+git cherry-pick 6687ddf #on a cherry pick video
+                        #on merge pick ce qu'on a envie
+
+******************************************************************************
+		RECRIRE L'HISTORIQUE
+AU LIEU DE MERGE NOUS AVONS REBASE pour un historique linéaire sans branch
+Nous avons une branch master et une autre develop.
+on modifie le point de bifurcation des deux branches pour qu'une branche se 
+positionne à la suite d'une autre branch comme celle de master.
+on se positionne sur la branch que l'on souhaite rebase
+git switch develop
+git rebase master
+et on règle les conflits
+git rebase --continue #on passe au commit suivant pour résoudre les conflits
+ou
+git rebase --abort #annule le rebase
+on a nos deux branches à la suite mais on se retrouve dans
+le cas d'un merge fast forward.
+git merge develop #on se retrouve avec les modification de ma branh master et avec develop aussi.
+
+C'EST POUR CHANGER L'HISTORIQUE ON NE SOUHAITE PAS LES DEVELOPPEMENTS FAIT EN PARALLELE.
+
+
+
+***************************************
+	**********************************************	
+				GITHUB
+		*************************************************
+				******************************************
+
+LOCAL						Remote
+working		staging		localpo		remote
+  directory	  area				  repo
+   
+  git add--------->
+                   git commit----->
+				   git push--------->
+				   git pull<---------			
+       <------git chekout-----------
+
+ 

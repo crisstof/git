@@ -149,8 +149,14 @@ Pour ignorer des fichiers log , keyapi  ...
 "ajouter le fichier  .gitignore
 et ajouter les noms de fichier dans ce fichier
 git status #on a que gitignore et pas les autres fichiers entrées
-
-
+Sur windows on a toutjours le .gitignore.txt ??
+   ouvrir>enregistrer sous> ".gitignore" [selection tous les fichier]
+Mais si on push nous n'avons pas la modification ?? .gitignore ne marche pas ??
+   Supprimer le cache de git:  
+				git rm -r --cached .
+!!ajouter les fichiers répertoire  qu'on ne veut pas dans le .gitignore
+  Si vous allez plus loin vous avez des syntaxes comme pour garder que le fic.exe et 
+  ne pas push les fichiers poubelles
 
 -----------------------------------------------------------------------------------------
 --------autres commandes-----------------------------------------------------------------

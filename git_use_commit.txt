@@ -1,0 +1,77 @@
+***************UTILISATON DE GIT ********************************************************************************************
+
+*****Créer une branche   ******
+git branch  #sur quelle branche on est. (il faut dèjà avoir fait un commit)
+git branch -a #pour voir les autres branches
+git branch contact  #crée une nouvelle branche contact
+git switch contact  #on va sur la branch contact
+			#on peut travailler sur la branche d'expérimentaiton (contact) 
+ou
+git switch -c contact #on crée une branch et on switch directement dessus.
+ou 
+on peut créer une nouvelle branche à partir de cette version:
+git checkout -b old-state  numcommit
+#pour revenir à la version actuelle il faudra refaire check-out
+*****Supprimer une branch*** #Ne pas être sur la branch qu'on veut supprimer
+git branch -d contact #si on a merge
+git branch -D contact #branch non merger
+
+*****Renommer des branch**** #il faut être sur la branch
+git branch -m master2 #bien, mais depuis 2020 github utilise main au lieu de master
+
+*****Se déplacer dans les branches avec switch: #mais avant nous avions git Checkout
+git branch api  #crée une branch
+git checkout api #on a switcher entre les branches
+*mais aussi on peut switcher entre les commits*
+git checkout 93a74505713ec8fa3d37529edd632e1b609b334a
+##on voit les modifications le Head est au commit arrière
+#et pour revenir en haut de ma branche
+git checkout master
+**pour changer de commit plus facilement on peut créer des tag**
+on va sur un commit est:
+git tag V1    #au lieu d'un id
+git tag -d V1 #supprime le tag
+git tag #liste les tags
+
+********************************************************************************************************************************************************************
+
+
+****Visualiser les différences des commits?
+Après plusieurs travaux on ne sait plus ce qu'on a changer ou commiter à la fin ?
+git diff #nous montre les changements par lignes (-- retirer, ++ ajouter)
+    git diff --staged fic.o
+    git diff head #compare tout les fichiers
+gitk&       #voir la position et révision dans le graphe des révisions et branches
+git status
+git log --oneline
+****
+
+****Comment revenir sur un commit?  (revenir en arrière d'un fichier)
+#Revenir à un commit
+git checkout e32bb29 index.html #ici on revient
+git checkout numcommit #visualiser, copier des lignes de code sans apporter aucune modification
+git commit "Suppression de la modif" #on refait un commit pour revenir comme avant
+enfin on a pas envie de supprimer les commits, mais on veut quand même revenir:
+git revert numCommit
+*****
+
+-----------------------------------------------------------------------------------------
+partager une branch
+-----------------------------------------------------------------------------------------
+avant de changer de branch vous devez faire un commit de tous vos changement 
+sinon on veut changer de branch sans commit et éviter le commit au milieu d'un travail en cours:
+git stash  #les modif sont sauvegardés et mis de côté (working directory est propre)
+git stash apply  #restaurés et retrouver l'état des fichier
+
+git branch -r  #partager une branch   #origin nom du serveur depuis le clone par exemple
+si le serveur possède une autre branche et que l'on souhaite travailler dessus:
+il faut créer une copie de cette branche sur votre pc on appelle ça tracker (suivre) les
+changements du serveur: git branch --track brancheLocale  origin/brancheServeur
+on a crée une branch locale on peut la connecter avec celle du serveur
+
+Ajouter une branche sur le serveur
+	. git push origin :refs/head/nom_new_branch
+	. git branch  - -track     //suivre la branch local en local. L’inverse est possible
+
+Supprimer une branche sur le serveur
+	. git push origin :heads/nom_branche_a_supprimer

@@ -1,0 +1,183 @@
+	*************************************************************************
+	*		Repository DEPOT NU SUR UN STOCKAGE 			*
+	*************************************************************************
+1. Brancher la clé USB. (vous pouvez créer sur votre drive distant)
+2. Initialiser un dépôt Git sur le clé.
+3. Ajouter celui-ci en tant que dépôt distant de votre dépôt de travail. (dépôt nu)
+4. Pousser vos changements.
+
+
+Se rendre dans le répertoire que vous avez créé avant d'exécuter git init --bare et
+il est conventionnel de donner aux référentiels nus l'extension .git:
+un référentiels nus n'ont pas d'arborescence de travail qui leur est attachée, 
+vous ne pouvez donc pas facilement leur ajouter des fichiers comme sur un référentiel non-nu normal(git add <file> et git commit)
+Vous mettez presque toujours à jour un référentiel nu en le poussant (git push) à partir d'un autre référentiel.
+
+Vous devez travailler sur votre projet à partir de votre référentiel local et utiliser le serveur comme référentiel central 
+(initialiser votre dépôt local).
+
+l'indicateur --bare crée un référentiel qui n'a pas de répertoire de travail.
+Le référentiel nu est le référentiel central et vous ne pouvez pas modifier (stocker) les codes ici pour éviter l'erreur de fusion.
+Exemple: si nous ajoutons un fichier dans votre référentiel local (mach1) et que vous poussez vers le référentiel nu, vous ne pouvez
+pas voir le fichier dans le référentiel nu car il est toujour "vide".
+Cependant vous pouvez vraiment faire quelque chose vers le référentiel et vous pouvez voir de manière inexplicite en clonant un autre
+réferentiel sur votre serveur (mach2).
+Le référentiel local de mach1 et le référentiel copie de la mach2 ne sont pas nus
+git/nu <---------> (mach1)git/non-nu
+       <---------> (mach2)git/non-nu ...
+------------------------***************PRACTICE**************************-----------------------------------------------
+Practice:
+---------
+sur le dépôt distant clé_usb:
+-----------------------------
+> git init --bare \ConnecSens\git\backup_repo.git 
+#crée le dossier et fichier ou si on est dedans crée juste les fichiers .gitgit remote 
+#ajoute hooks, info, refs, objects, description, HEAD, config
+
+sur le dépôt de travail local:
+------------------------------
+>git init
+>git add .
+>git commit -m "initial firstcommit"
+
+>git remote add backup G:/repertoireName/git/bakup_repo.git
+>git push -u backup master   #et pas main 
+
+>git remote -v #affiche info sur vos dépôt distants
+
+#Nous pouvons cloner maintenant le projet
+> git clone G:/repertoireName/git/backup_repo.git/
+----------------------------******************FIN PRACTICE******************************--------------------------------------------
+*************************************FAIRE UN DEPOT NU SUR CLE USB*********************************************************************************************
+Rapide:
+-----------------------------------------------------------------
+#initialiser le dépotnu
+git init --bare
+#ajouter notre dépôt locale
+git remote add backup /media/votre-code.git
+#pousser les changements
+git push backup master
+#restaurer le dépôt de sauvegarde
+git clone /media/votre-code.git
+------------------------------------------------------------------
+
+Se placer dans le répertoire (dépotnu).
+> git init --bare \repertoireName\git\noeud_repo.git
+Initialized empty Git repository in G:/git/noeud
+#Crée le dossier (repo.git) et le remplit avec les fichiers .git représentant un dépôt git.
+#ce référentiel est inutile pas de commit, pas de branch bien que l'on peut cloner ce référentiel
+#vous ne pouvez pas en tirer parti de grand chose
+
+Créer un dossier de travail si vous en avez un ou pas?
+
+Non: Clonez le dépôt vide:
+>git clone G:/repertoireName/git/noeud_repo.git   /path/to/work
+cloning into ... done   #sur dossier inexistant ou vide.
+>git status
+On branch master ....
+#Vous pouvez travailler enfin, ensuite:
+>git add .
+>git config --local user.name criss 		#optional
+>git config --local user.email criss@fr.com	#optional
+>git commit -m "added afile"
+Vous pouvez pousser sur le dépôt nu
+>git push origin master
+#Nous avons maintenant un dépôt nu fonctionnel qui peut être cloné ailleurs
+nous pouvons faire maintenant git pull  / git push origin master
+
+Oui: on a un dossier de travail (lier notre dépôt au dépôt nu)
+>git init
+>git add .
+>git commit -m "added stuff"
+#Nous avons notre commit et une branche principale locale.
+#nous devons le transformer en une branche en amont suivie à distance
+>git remote add origine G:/repertoireName/git/noeud_repo.git
+>git push -u orig‌in master  
+Delta compression using up to 4 threads
+....
+#-u drapeau pour définir la nouvelle branche en amont suivie
+#nous avons maintenant un dépôt nu entièrement fonctionnel qui 
+#peut être cloné ailleurs sur une branche principale ainsi qu'une 
+#copie de travail locale qui peut tirer et pousser.
+
+***************************************************************************************************************************************************************
+-----------------------------------------------------------------
+#initialiser le dépotnu
+git init --bare                #branches  config  description HEAD  hooks  info  objects   refs
+#ajouter notre dépôt locale
+git remote add backup /media/votre-code.git
+#pousser les changements
+git push backup master
+#restaurer le dépôt de sauvegarde
+git clone /media/votre-code.git
+------------------------------------------------------------------
+Trouver le chemin de la clé USB: df -h
+------------------------------------------------------------------
+Ajouter le dépôt distant (associer votre dépôt de sauvegarde avec celui du travail)
+>git remote add [alias]  [target]  #attribut un alias à un dépôt cible. alias backup et dépôt cible dépôt de sauvegarde.
+>git remote add backup /media/votre-code.git
+>git remote -v #affiche info sur vos dépôt distants
+-------------------------------------------------------------------
+pousser les changements
+git push backup master
+--------------------------------------------------------------------
+cloner le dépôt
+git clone /media/votre-code.git
+
+Attention le clone configure un dépôt distant par défaut origin qui pointe vers votre dépôt de sauvegarde.
+pour retrouver la configuration initiale de travail renommez ce dépôt distant et ajoutes le dépôt distant de votre organisation.
+
+>git remote -v
+origin /media/votre-code.git (fetch)
+origin /media/votre-code.git (push)
+
+>git remote rename origin backup
+>git remote -v
+backup /media/votre-code.git (fetch)
+backup /media/votre-code.git (push)
+
+>git remote add origin https://github.com/login/votrr-code.git
+>git remote -v
+backup /media/votre-code.git (fetch)
+backup /media/votre-code.git (push)
+origin /media/votre-code.git (fetch)
+origin /media/votre-code.git (push)
+---------------------------------------------------------------------
+FINALEMENT:
+On est sortie du train-train pull/commit/push
+d'autre usage des dépôt distant avec google drive, dropbox pointant de github sur du https ou ssh.
+
+
+Note: 
+-----
+vous devrez d'abord autoriser les utilisateurs à pousser vers votre référentiel, Une fois à l'intérieur test_repo.git, faites
+[ git config receive.denyCurrentBranch ignore
+  git init --bare  --shared=group #modification de la communauté
+]
+
+version git >=1.8
+[ git init --bare --shared=group  .git
+  git config receive.denyCurrentBranch ignore
+]
+version git  < 1.8
+[ mkdir .git
+  cd .git
+  git init --barre --shared=group
+  git config receive.denyCurrentBranch  ignore
+]
+
+Obtenir un journal des modification sur un référentiel nu en définissant explicitement le chemin à l'aide de l'option --relative/
+[  cd test_repo
+   git log --relative=/
+]
+
+Initialiser votre dépôt local 
+[ mkdir newProject
+  cd    newProject
+  touch .gitignore
+  git init
+  git add .
+  git commit -m "Initial Commit"
+  git remote add origin user@host:~/path_on_server/newProject.git
+  git push origin master
+]

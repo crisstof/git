@@ -1,1 +1,10 @@
 Comment participer à un projet et demander un pull request.
+
+git clone project
+git branch nameBranch
+git switch nameBranch
+#on fait un commit (git add . et git commit -m "commentaire"
+git swicth main #on se remet dans la branch
+git merge nameBranch #fusion du projet si pas de changement du main (fast-forward)
+   
+

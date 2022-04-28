@@ -7,4 +7,4 @@ git switch nameBranch
 git swicth main #on se remet dans la branch
 git merge nameBranch #fusion du projet si pas de changement du main (fast-forward)
    
-
+faire un pull-request

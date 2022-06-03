@@ -35,6 +35,10 @@ git remote add origin https://github.com/crissval/example.git #on va lier le dé
 							[facultatif si on a fait un clone]
 git push -u origin main #on envoie sur github
 				#Authentification si ok.
+Si nous avons pas accès il faut utiliser un token
+setting>developer setting>personal acces token> New token
+copier le jeton et utiliser la commande
+git push https://token@github.com/username/nomDepot.git
 
 ****Visualiser les différences des commits?
 Après plusieurs travaux on ne sait plus ce qu'on a changer ou commiter à la fin ?

@@ -1,0 +1,33 @@
+
+---git command base---------------------------
+git clone https://github.com/user/dossier.git
+modification??
+git add .
+git commit -m "commentaire"
+git push
+-----------------------------------------------
+
+
+
+
+---git pro------------------------------------
+
+
+
+
+----------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

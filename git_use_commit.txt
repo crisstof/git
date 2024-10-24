@@ -5,7 +5,7 @@ git branch  #sur quelle branche on est. (il faut dèjà avoir fait un commit)
 git branch -a #pour voir les autres branches
 git branch contact  #crée une nouvelle branche contact
 git switch contact  #on va sur la branch contact
-			#on peut travailler sur la branche d'expérimentaiton (contact) 
+			#on peut travailler sur la branche d'experimentation (contact) 
 ou
 git switch -c contact #on crée une branch et on switch directement dessus.
 ou 

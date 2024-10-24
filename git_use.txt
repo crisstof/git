@@ -5,9 +5,30 @@ modification??
 git add .
 git commit -m "commentaire"
 git push
+
+****Comment revenir sur un commit?  (revenir en arrière d'un fichier)
+#Revenir à un commit
+git checkout e32bb29 index.html #ici on revient
+git checkout numcommit #visualiser, copier des lignes de code sans apporter aucune modification
+git commit "Suppression de la modif" #on refait un commit pour revenir comme avant
+enfin on a pas envie de supprimer les commits, mais on veut quand même revenir:
+git revert numCommit
+*****
+
 -----------------------------------------------
+*****Créer une branche   ******
+git branch  #sur quelle branche on est. (il faut dèjà avoir fait un commit)
+git branch -a #pour voir les autres branches
+git branch contact  #crée une nouvelle branche contact
+git switch contact  #on va sur la branch contact
+			#on peut travailler sur la branche d'experimentation (contact) 
 
-
+git checkout api #on a switcher entre les branches
+*mais aussi on peut switcher entre les commits*
+git checkout 93a74505713ec8fa3d37529edd632e1b609b334a
+##on voit les modifications le Head est au commit arrière
+#et pour revenir en haut de ma branche
+git checkout master
 
 
 ---git pro------------------------------------

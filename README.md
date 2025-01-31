@@ -1,7 +1,7 @@
 # git
 let's talk about git
 ![Screenshot](gitStruct.png)
-Commandes Git
+Commandes Git <br>
 git init                        #initialise un dépôt git
 git add .     
 gti commit -m 'name commit'     #enregistrer avec un nom de commit
